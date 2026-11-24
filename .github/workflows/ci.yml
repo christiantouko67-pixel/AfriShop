@@ -1,0 +1,19 @@
+name: Verification du site AfriShop
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  verification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+      - name: Afficher les fichiers
+        run: ls -la
+      - name: Verifier le HTML
+        run: test -f index.html
+      - name: Verifier le CSS
+        run: test -f style.css
+      - name: Confirmation
+        run: echo "Verification reussie"
