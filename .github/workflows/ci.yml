@@ -1,4 +1,4 @@
-@'
+
 name: CI-CD AfriShop
 on:
   push:
@@ -39,4 +39,3 @@ jobs:
       - name: Deployer le site
         id: deployment
         uses: actions/deploy-pages@v4
-'@ | Set-Content -Path .github\workflows\ci.yml -Encoding ascii
