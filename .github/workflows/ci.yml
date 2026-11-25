@@ -1,19 +1,42 @@
-name: Verification du site AfriShop
+@"
+name: CI-CD AfriShop
 on:
   push:
     branches: [main]
   workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 jobs:
   verification:
     runs-on: ubuntu-latest
     steps:
       - name: Recuperer le code
         uses: actions/checkout@v4
-      - name: Afficher les fichiers
-        run: ls -la
-      - name: Verifier le HTML
-        run: test -f index.html
-      - name: Verifier le CSS
-        run: test -f style.css
-      - name: Confirmation
-        run: echo "Verification reussie"
+      - name: Verifier les fichiers non vides
+        run: |
+          test -s index.html
+          test -s style.css
+      - name: Configurer Pages
+        uses: actions/configure-pages@v5
+      - name: Preparer le site
+        run: |
+          mkdir -p public
+          cp index.html style.css public/
+          if [ -d images ]; then cp -r images public/; fi
+      - name: Creer l artefact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+  deploiement:
+    needs: verification
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: `${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deployer le site
+        id: deployment
+        uses: actions/deploy-pages@v4
+"@ | Set-Content -Path .github\workflows\ci.yml -Encoding ascii
