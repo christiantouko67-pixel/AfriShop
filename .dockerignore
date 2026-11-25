@@ -1,0 +1,5 @@
+.dockerignore : réduire le contexte de construction
+.git
+.github
+.env
+*.log
